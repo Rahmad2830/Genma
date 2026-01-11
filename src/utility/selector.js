@@ -1,59 +1,105 @@
 export const $ = (target) => {
-  const el = typeof target === "string" ? document.querySelector(target) : target
+  let node
   
-  if(!el) {
-    console.warn(`Element ${target} is not found`)
-    return null
+  if (typeof target === "string") {
+    node = document.querySelectorAll(target)
+  } else if (
+    target instanceof Element ||
+    target === document ||
+    target === window
+  ) {
+    node = [target]
+  } else if (target instanceof NodeList || Array.isArray(target)) {
+    node = target
+  } else {
+    node = []
+  }
+  
+  if(!node.length) {
+    console.warn(`Element ${target} not found`)
   }
   
   const methods = {
     on(event, callback) {
-      el.addEventListener(event, callback)
+      node.forEach(el => el.addEventListener(event, callback))
       return methods
     },
     text(value) {
       if(value === undefined) {
-        return el.textContent
+        return node[0].textContent
       }
-      el.textContent = value
+      node.forEach(el => el.textContent = value)
       return methods
     },
     html(value) {
       if(value === undefined) {
-        return el.innerHTML
+        return node[0].innerHTML
       }
-      el.innerHTML = value
+      node.forEach(el => el.innerHTML = value)
       return methods
     },
     addClass(val) {
-      el.classList.add(val)
+      node.forEach(el => el.classList.add(val))
       return methods
     },
     removeClass(val) {
-      el.classList.remove(val)
+      node.forEach(el => el.classList.remove(val))
       return methods
     },
     toggleClass(val, cond) {
-      el.classList.toggle(val, cond)
+      node.forEach(el => el.classList.toggle(val, cond))
       return methods
     },
     val(value) {
       if(value === undefined) {
-        return el.value
+        return node[0].value
       }
-      el.value = value
+      node.forEach(el => el.value = value)
       return methods
     },
     attr(name, value) {
       if(value === undefined) {
-        return el.getAttribute(name)
+        return node[0].getAttribute(name)
       }
-      el.setAttribute(name, value)
+      node.forEach(el => el.setAttribute(name, value))
       return methods
     },
     removeAttr(name) {
-      el.removeAttribute(name)
+      node.forEach(el => el.removeAttribute(name))
       return methods
+    },
+    each(callback) {
+      node.forEach((el, i) => {
+        callback(el, i)
+      })
+      return methods
+    },
+    first() {
+      return $(node[0])
+    },
+    last() {
+      return $(node[node.length - 1])
+    },
+    eq(index) {
+      return $(node[index])
+    },
+    off(event, callback) {
+      node.forEach(el => el.removeEventListener(event, callback))
+      return methods
+    },
+    hasClass(value) {
+      return node[0].classList.contains(value)
+    },
+    css(obj = {}) {
+      if(typeof obj !== "object") {
+        console.warn(".css() value must be an object css")
+        return methods
+      }
+      node.forEach(el => Object.assign(el.style, obj))
+      return methods
+    },
+    get() {
+      return node
     }
   }
   
