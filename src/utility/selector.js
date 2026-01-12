@@ -100,6 +100,19 @@ export const $ = (target) => {
     },
     get() {
       return node
+    },
+    prop(type, value) {
+      if(value === undefined) {
+        return node[0][type]
+      }
+      node.forEach(el => {
+        if(type in el) {
+          el[type] = value
+        } else {
+          console.warn(`Property name ${type} does not exist`)
+        }
+      })
+      return methods
     }
   }
   
