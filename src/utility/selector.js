@@ -113,6 +113,55 @@ export const $ = (target) => {
         }
       })
       return methods
+    },
+    find(selector) {
+      let found = []
+      node.forEach(el => {
+        found.push(...el.querySelectorAll(selector))
+      })
+      return $(found)
+    },
+    closest(selector) {
+      let found = []
+      node.forEach(el => {
+        const match = el.closest(selector)
+        if(match) found.push(match)
+      })
+      return $(found)
+    },
+    is(test) {
+      const el = node[0]
+      if (!el) return false
+    
+      if (typeof test === "function") {
+        return !!test(el)
+      }
+    
+      switch (test) {
+        case ":disabled":
+          return el.disabled === true
+        case ":enabled":
+          return el.disabled === false
+        case ":checked":
+          return el.checked === true
+        case ":visible":
+          return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length)
+        case ":hidden":
+          return !(el.offsetWidth || el.offsetHeight || el.getClientRects().length)
+        case ":empty":
+          return el.innerHTML.trim() === ""
+        case ":focus":
+          return document.activeElement === el
+        default:
+          return el.matches(test)
+      }
+    },
+    data(key, value) {
+      if(value === undefined) {
+         return node[0].dataset[key]
+      }
+      node.forEach(el => el.dataset[key] = value)
+      return methods
     }
   }
   
