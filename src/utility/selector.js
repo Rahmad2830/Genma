@@ -51,8 +51,12 @@ export const $ = (target) => {
       return methods
     },
     val(value) {
-      if(value === undefined) {
-        return node[0].value
+      const el = node[0]
+      if(!el) return
+      const hasValueMethod = "value" in el
+      
+      if(value === undefined && hasValueMethod) {
+        return el.value
       }
       node.forEach(el => el.value = value)
       return methods
@@ -162,7 +166,51 @@ export const $ = (target) => {
       }
       node.forEach(el => el.dataset[key] = value)
       return methods
-    }
+    },
+    remove() {
+      node.forEach(el => el.remove())
+      return methods
+    },
+    append(content) {
+      if(typeof content !== "string") {
+        console.warn("append() value must be string")
+        return methods
+      }
+      node.forEach(el => {
+        el.insertAdjacentHTML("beforeend", content)
+      })
+      return methods
+    },
+    prepend(content) {
+      if(typeof content !== "string") {
+        console.warn("prepend() value must be string")
+        return methods
+      }
+      node.forEach(el => {
+        el.insertAdjacentHTML("afterbegin", content)
+      })
+      return methods
+    },
+    after(content) {
+      if(typeof content !== "string") {
+        console.warn("after() value must be string")
+        return methods
+      }
+      node.forEach(el => {
+        el.insertAdjacentHTML("afterend", content)
+      })
+      return methods
+    },
+    before(content) {
+      if(typeof content !== "string") {
+        console.warn("append() value must be string")
+        return methods
+      }
+      node.forEach(el => {
+        el.insertAdjacentHTML("beforebegin", content)
+      })
+      return methods
+    },
   }
   
   return methods
