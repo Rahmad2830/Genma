@@ -5,7 +5,7 @@ import resolve from '@rollup/plugin-node-resolve'
 export default {
 	input: 'src/index.js',
 	output: {
-		file: 'dist/cdn.min.js',
+		file: 'dist/genma.min.js',
 		format: 'iife',
 	},
 	plugins: [resolve(), minify()]
