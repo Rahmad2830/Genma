@@ -27,3 +27,25 @@ $.clickOutside = (target, callback) => {
   
   return () => $(document).off("click", handler)
 }
+
+//escape HTML
+const _esc = document.createElement("div")
+const escapeHTML = (str) => {
+  _esc.textContent = str
+  return _esc.innerHTML
+}
+
+$.html = (strings, ...values) => {
+  let result = ''
+
+  strings.forEach((str, i) => {
+    result += str
+
+    const value = values[i]
+    if (value !== undefined) {
+      result += escapeHTML(value)
+    }
+  })
+
+  return result
+}

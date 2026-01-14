@@ -203,7 +203,7 @@ export const $ = (target) => {
     },
     before(content) {
       if(typeof content !== "string") {
-        console.warn("append() value must be string")
+        console.warn("before() value must be string")
         return methods
       }
       node.forEach(el => {
@@ -211,6 +211,17 @@ export const $ = (target) => {
       })
       return methods
     },
+    renderList(data, templateFn) {
+      if(!Array.isArray(data)) {
+        console.warn(`${data} must be an array`)
+        return methods
+      }
+      const htmlContent = data.map((item, index) => templateFn(item, index)).join('')
+      node.forEach(el => {
+          el.innerHTML = htmlContent;
+      })
+      return methods
+    }
   }
   
   return methods
