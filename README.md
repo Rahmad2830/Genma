@@ -95,7 +95,7 @@ Select elements like `document.querySelectorAll`, but returns a chainable Genma 
   $('.item')        // all .item
   $('#header')      // element by ID
   $(document)       // document object
-  $(this)           // for represent selected elements
+  $(this)           // wrap current DOM element (inside event handlers)
   ```
 - **Use Example**
   ```js
@@ -143,6 +143,9 @@ Check if first element matches a selector or pseudo-class.
 | :hidden | `The opposite of visible. Returns true if the element is hidden (e.g., display: none or size 0x0).` |
 | :empty | `Checks the content inside an element. If the result is empty after trimming spaces, the element has no content.` |
 | :focus | `Checks whether the element is the active/focused element (e.g. the cursor is blinking on the input).` |
+
+> ⚠️ `.is()` operates only on the **first matched element**.
+> If no element is found, it will throw Error.
 
 ---
 
@@ -207,7 +210,7 @@ Insert HTML strings (must be string).
   ```
 
 #### `.renderList(array, renderItemFn)`
-Efficiently render lists.
+Re-render a list **imperatively** by replacing its entire contents.
 
 - **Parameters**: `array` (Array), `renderItemFn(item, index) => string`
 - **Example**:
@@ -217,6 +220,12 @@ Efficiently render lists.
     `<li>${i + 1}. ${user.name}</li>`
   );
   ```
+
+> ⚠️ `renderList` **replaces innerHTML entirely**.
+> - Existing DOM nodes are discarded
+> - Event listeners inside the list are removed
+>
+> This is intentional and follows an **imperative rendering model**.
 
 #### `.addClass()`, `.removeClass()`, `.toggleClass()`, `.hasClass()`
 Class manipulation.
@@ -256,6 +265,10 @@ Create reactive state with optional side effects.
 > const cart = $wire([], renderCart);
 > cart.mutate(items => items.push(newItem));
 > ```
+
+> ℹ️ `$wire` is intended for **DOM rendering side-effects only**.
+> Avoid long-lived subscriptions, timers, or external observers inside `$wire`
+> callbacks, as Genma does not manage cleanup.
 
 ---
 
@@ -371,7 +384,6 @@ $.clickOutside("#modal", () => {
     .text('Saving...');
   ```
 - **Prefer `$wire` for simple state** → avoid global variables
-- **`$wire` is for render dom. dont put side effect on it, can cause memory leak**
 - **Use `$fetch.inject` for API clients** → DRY headers/auth
 
 ---
@@ -399,7 +411,7 @@ $.clickOutside("#modal", () => {
 | **Use Case** | Micro-interactions | Everything | Legacy projects | Component-level reactivity |
 | **Learning Curve** | Low | Medium | Low | Medium |
 
-> Genma = **jQuery’s simplicity** + **modern safety** + **zero dependencies**.
+> Genma = **jQuery-like ergonomics** + **modern browser APIs** + **intentional constraints.**
 
 ---
 
@@ -418,4 +430,5 @@ A: Absolutely! It’s used in production by teams who need lightweight interacti
 
 ## 📜 License
 
-MIT © [rahmatnurhidayat0101#gmail.com] do anything you want with it!
+MIT License © Rahmat Nur Hidayat  
+Free to use, modify, and distribute.
