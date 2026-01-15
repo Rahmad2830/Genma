@@ -41,11 +41,11 @@ Genma is a tiny (~1.5KB gzipped) utility library that simplifies common DOM oper
 
 ### Via CDN (recommended for quick start)
 ```html
-<script src="https://unpkg.com/genma@latest/dist/genma.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/Rahmad2830/Genma@v1.0.0/dist/genma.min.js"></script>
 ```
 
 ### Or download & host locally
-1. Download [`genma.min.js`](https://unpkg.com/genma@latest/dist/genma.min.js)
+1. Download [`genma.min.js`](https://github.com/Rahmad2830/Genma/archive/refs/tags/v1.0.0.zip)
 2. Include in your HTML:
 ```html
 <script src="/path/to/genma.min.js"></script>
@@ -61,7 +61,7 @@ Genma is a tiny (~1.5KB gzipped) utility library that simplifies common DOM oper
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="https://unpkg.com/genma@latest/dist/genma.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/Rahmad2830/Genma@v1.0.0/dist/genma.min.js"></script>
 </head>
 <body>
   <button id="btn">Click me!</button>
@@ -95,6 +95,14 @@ Select elements like `document.querySelectorAll`, but returns a chainable Genma 
   $('.item')        // all .item
   $('#header')      // element by ID
   $(document)       // document object
+  $(this)           // for represent selected elements
+  ```
+- **Use Example**
+  ```js
+  $(".btn").on("click", function() {
+    //always using function() instead of arrow function for enable $(this) inside selected element
+    $(this).css({ color: "green" })
+  })
   ```
 
 #### `.first()`, `.last()`, `.eq(index)`
@@ -126,6 +134,15 @@ Check if first element matches a selector or pseudo-class.
   ```js
   if ($('#modal').is(':visible')) { /* ... */ }
   ```
+| Values | Effect |
+|--------|--------|
+| :disabled | `Checks whether an element (such as a button or input) has the disabled attribute. Returns true if the element is disabled.` |
+| :enabled | `The opposite of disabled. Returns true if the element is active and interactable.` |
+| :checked | `Specifically for checkboxes or radio buttons. Returns true if the element is currently checked/selected.` |
+| :visible | `Checks whether an element is visible on the screen. It checks the width (offsetWidth), height (offsetHeight), or whether the element has an area (rects). If any of these are present, the element is visible.` |
+| :hidden | `The opposite of visible. Returns true if the element is hidden (e.g., display: none or size 0x0).` |
+| :empty | `Checks the content inside an element. If the result is empty after trimming spaces, the element has no content.` |
+| :focus | `Checks whether the element is the active/focused element (e.g. the cursor is blinking on the input).` |
 
 ---
 
@@ -282,6 +299,12 @@ Debounce function calls.
   ```js
   const search = $.debounce(query => $fetch(`/search?q=${query}`), 300);
   $('#search').on('input', e => search(e.target.value));
+  
+  // or
+  
+  $("#input").on("input", $.debounce((e) => {
+      console.log("Search:", e.target.value);
+  }, 500));
   ```
 
 ---
